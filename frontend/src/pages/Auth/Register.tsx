@@ -9,7 +9,6 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { api } from "../../lib/api";
-import { useAuth } from "../../context/AuthContext";
 
 const registerSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -23,7 +22,6 @@ export default function Register() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
     const {

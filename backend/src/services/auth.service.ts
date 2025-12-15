@@ -14,18 +14,18 @@ export const registerUser = async (
 
   const hashedPassword = await hashPassword(password);
 
-  const user = await createUser({
+  const user: any = await createUser({
     name,
     email,
     password: hashedPassword,
   });
 
   // ✅ use _id and convert to string
-  const token = generateToken(user._id.toString());
+  const token = generateToken((user as any)._id.toString());
 
   return {
     user: {
-      id: user._id,
+      id: (user as any)._id,
       name: user.name,
       email: user.email,
     },
@@ -34,7 +34,7 @@ export const registerUser = async (
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const user = await findUserByEmail(email);
+  const user: any = await findUserByEmail(email);
   if (!user) {
     throw new Error("Invalid credentials");
   }
@@ -44,11 +44,11 @@ export const loginUser = async (email: string, password: string) => {
     throw new Error("Invalid credentials");
   }
 
-  const token = generateToken(user._id.toString());
+  const token = generateToken((user as any)._id.toString());
 
   return {
     user: {
-      id: user._id,
+      id: (user as any)._id,
       name: user.name,
       email: user.email,
     },

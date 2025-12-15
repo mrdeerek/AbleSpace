@@ -2,9 +2,6 @@
 
 A comprehensive, full-stack task management application built to facilitate seamless collaboration. It features real-time updates, secure authentication, role-based task management, and a premium "Aurora" design system.
 
-### Author
-**Kunal Raj**
-
 ---
 
 ## 🚀 Tech Stack
@@ -146,3 +143,7 @@ The backend includes a suite of unit tests for the Service layer using **Jest**.
 cd backend
 npm run test
 ```
+
+### Author
+**Kunal Raj**
+

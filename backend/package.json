@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kunal Raj",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

@@ -45,6 +45,8 @@ export function TaskCard({ task }: TaskCardProps) {
     };
 
     const isCreator = user?.id === task.creatorId;
+    const isAssignee = user?.id === task.assignedToId;
+    const canUpdate = isCreator || isAssignee;
 
     return (
         <>
@@ -92,7 +94,7 @@ export function TaskCard({ task }: TaskCardProps) {
                         </div>
                         <div className="flex items-center gap-2">
                             <UserIcon className="h-3 w-3" />
-                            {task.assignedToId === user?.id ? "Assigned to You" : "Assigned to others"}
+                            {isAssignee ? "Assigned to You" : "Assigned to others"}
                         </div>
                     </div>
                 </CardContent>
@@ -102,9 +104,10 @@ export function TaskCard({ task }: TaskCardProps) {
                     </div>
 
                     <select
-                        className="text-xs border rounded p-1 bg-transparent focus:ring-1 focus:ring-primary"
+                        className="text-xs border rounded p-1 bg-transparent focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                         value={task.status}
                         onChange={(e) => handleStatusChange(e.target.value as Status)}
+                        disabled={!canUpdate}
                     >
                         {Object.values(Status).map(s => (
                             <option key={s} value={s}>{s.replace("_", " ")}</option>

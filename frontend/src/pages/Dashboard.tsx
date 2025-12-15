@@ -41,7 +41,7 @@ export default function Dashboard() {
 
     const assignedTasks = filterTasks(allTasks?.filter(t => t.assignedToId === user?.id));
     const createdTasks = filterTasks(allTasks?.filter(t => t.creatorId === user?.id));
-    const overdueTasks = filterTasks(allTasks?.filter(t => new Date(t.dueDate) < new Date() && t.status !== Status.COMPLETED));
+    const overdueTasks = filterTasks(allTasks?.filter(t => new Date(t.dueDate) < new Date() && t.status !== Status.COMPLETED && t.assignedToId === user?.id));
 
     return (
         <div

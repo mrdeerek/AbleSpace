@@ -1,0 +1,17 @@
+### Unauthorized request
+GET http://localhost:5000/api/test/protected
+
+###
+
+### Authorized request
+GET http://localhost:5000/api/test/protected
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+### Login to get JWT
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "kunal@test.com",
+  "password": "123456"
+}

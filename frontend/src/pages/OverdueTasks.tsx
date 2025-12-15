@@ -4,6 +4,7 @@ import { Button } from "../components/ui/button";
 import { TaskList } from "../components/tasks/TaskList";
 import { useTasks } from "../hooks/useTasks";
 import { useSocket } from "../hooks/useSocket";
+import { useAuth } from "../context/AuthContext";
 import { Priority, Status } from "../types/task";
 import type { Task } from "../types/task";
 
@@ -16,15 +17,19 @@ export default function OverdueTasks() {
     // Initialize socket listener
     useSocket();
 
+    const { user } = useAuth();
+
     // Fetch all tasks
     const { data: allTasks, isLoading } = useTasks();
 
     const filterTasks = (tasks: Task[] | undefined) => {
         if (!tasks) return [];
         const filtered = tasks.filter(task => {
-            // Overdue Logic: Due Date < Now AND Status != Completed
+            // Overdue Logic: Due Date < Now AND Status != Completed AND Assigned to Me
             const isOverdue = new Date(task.dueDate) < new Date() && task.status !== Status.COMPLETED;
-            if (!isOverdue) return false;
+            const isAssignedToMe = task.assignedToId === user?.id;
+
+            if (!isOverdue || !isAssignedToMe) return false;
 
             const matchesPriority = priorityFilter ? task.priority === priorityFilter : true;
             return matchesPriority;

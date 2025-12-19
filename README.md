@@ -78,7 +78,8 @@ A comprehensive, full-stack task management application built to facilitate seam
 ## 📡 API Contract Documentation
 
 ### Remote Base URL
-`http://localhost:5000/api`
+Local: `http://localhost:5000/api`
+Production: `https://ablespace-2rbl.onrender.com/api`
 
 ### 1. Authentication (`/auth`)
 | Method | Endpoint    | Description                          | Payload |

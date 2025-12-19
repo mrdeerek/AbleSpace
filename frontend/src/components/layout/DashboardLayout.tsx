@@ -8,7 +8,8 @@ import {
     Settings,
     LogOut,
     Menu,
-    X
+    X,
+    Home
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
@@ -25,7 +26,8 @@ export default function DashboardLayout() {
     };
 
     const navItems = [
-        { name: "Dashboard", href: "/", icon: LayoutDashboard },
+        { name: "Home", href: "/", icon: Home },
+        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "My Tasks", href: "/tasks", icon: CheckSquare },
         { name: "Overdue", href: "/overdue", icon: Clock },
         { name: "Profile", href: "/profile", icon: Settings },
@@ -37,7 +39,7 @@ export default function DashboardLayout() {
             <div className="lg:hidden flex items-center justify-between p-4 border-b bg-card">
                 <div className="flex items-center gap-2">
                     <img src="/logo.png" alt="Logo" className="h-8 w-8" />
-                    <div className="font-bold text-xl text-primary">TaskMaster</div>
+                    <div className="font-bold text-xl text-primary">AbleSpace</div>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                     {isMobileMenuOpen ? <X /> : <Menu />}
@@ -55,7 +57,7 @@ export default function DashboardLayout() {
                     <div className="flex flex-col h-full">
                         <div className="h-16 flex items-center px-6 border-b gap-3">
                             <img src="/logo.png" alt="Logo" className="h-8 w-8" />
-                            <h1 className="text-2xl font-bold text-primary">TaskMaster</h1>
+                            <h1 className="text-2xl font-bold text-primary">AbleSpace</h1>
                         </div>
 
                         <div className="flex-1 overflow-y-auto py-4">

@@ -59,7 +59,7 @@ export default function Register() {
                     <div className="flex justify-center mb-4">
                         <div className="flex items-center gap-2">
                             <img src="/logo.png" alt="Logo" className="h-10 w-10" />
-                            <span className="font-bold text-2xl text-primary">TaskMaster</span>
+                            <span className="font-bold text-2xl text-primary">AbleSpace</span>
                         </div>
                     </div>
                     <CardTitle className="text-2xl font-bold tracking-tight text-center">Create an account</CardTitle>

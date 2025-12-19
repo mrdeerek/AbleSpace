@@ -10,6 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { useToast } from "../context/ToastContext";
 import { useState } from "react";
 
+import { motion } from "framer-motion";
+
 const profileSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
@@ -63,48 +65,71 @@ export default function Profile() {
     };
 
     return (
-        <div
-            className="min-h-full bg-cover bg-fixed bg-center animate-in fade-in duration-500 pb-10"
-            style={{
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.7)), url("/profile-bg.png")',
-                backgroundAttachment: 'fixed'
-            }}
-        >
-            <div className="max-w-2xl mx-auto pt-10 px-4">
-                <Card className="bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/75">
-                    <CardHeader>
-                        <CardTitle>Profile Settings</CardTitle>
+        <div className="min-h-full pb-10">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-3xl mx-auto pt-10 px-4"
+            >
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
+                    <p className="text-muted-foreground mt-2">
+                        Manage your account settings and preferences.
+                    </p>
+                </div>
+
+                <Card className="border-border/50 bg-card/50 backdrop-blur-xl shadow-xl overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+
+                    <CardHeader className="border-b border-border/50 bg-muted/20">
+                        <CardTitle>Personal Information</CardTitle>
                         <CardDescription>
-                            Update your personal information.
+                            Update your personal details here. Changes will be reflected across the workspace.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Full Name</Label>
-                                <Input id="name" {...register("name")} />
-                                {errors.name && (
-                                    <p className="text-sm text-destructive">{errors.name.message}</p>
-                                )}
+                    <CardContent className="p-6 md:p-8">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Full Name</Label>
+                                    <Input
+                                        id="name"
+                                        {...register("name")}
+                                        className="bg-background/50"
+                                    />
+                                    {errors.name && (
+                                        <p className="text-sm text-destructive">{errors.name.message}</p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email Address</Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        {...register("email")}
+                                        className="bg-background/50"
+                                    />
+                                    {errors.email && (
+                                        <p className="text-sm text-destructive">{errors.email.message}</p>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email Address</Label>
-                                <Input id="email" type="email" {...register("email")} />
-                                {errors.email && (
-                                    <p className="text-sm text-destructive">{errors.email.message}</p>
-                                )}
-                            </div>
-
-                            <div className="pt-4 flex justify-end">
-                                <Button type="submit" disabled={isSaving}>
+                            <div className="flex justify-end pt-4 border-t border-border/50">
+                                <Button
+                                    type="submit"
+                                    disabled={isSaving}
+                                    className="min-w-[120px]"
+                                >
                                     {isSaving ? "Saving..." : "Save Changes"}
                                 </Button>
                             </div>
                         </form>
                     </CardContent>
                 </Card>
-            </div>
+            </motion.div>
         </div>
     );
 }

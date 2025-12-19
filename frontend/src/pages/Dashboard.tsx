@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Filter } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import { TaskList } from "../components/tasks/TaskList";
 import { CreateTaskModal } from "../components/tasks/CreateTaskModal";
@@ -43,36 +44,60 @@ export default function Dashboard() {
     const createdTasks = filterTasks(allTasks?.filter(t => t.creatorId === user?.id));
     const overdueTasks = filterTasks(allTasks?.filter(t => new Date(t.dueDate) < new Date() && t.status !== Status.COMPLETED && t.assignedToId === user?.id));
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
-        <div
-            className="space-y-8 animate-in fade-in duration-500 pb-10 min-h-full bg-cover bg-fixed bg-center"
-            style={{
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.7)), url("/dashboard-bg.png")',
-                backgroundAttachment: 'fixed'
-            }}
+        <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="space-y-8 pb-10 min-h-full"
         >
-            <div className="p-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-6 md:p-8 space-y-8">
+                <motion.div variants={item} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                        <p className="text-muted-foreground mt-1">
-                            Welcome back, {user?.name}. Here's what's happening.
+                        <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+                            Dashboard
+                        </h1>
+                        <p className="text-muted-foreground mt-2 text-lg">
+                            Welcome back, <span className="font-semibold text-foreground">{user?.name}</span>. Here's your overview.
                         </p>
                     </div>
-                    <Button onClick={() => setIsCreateModalOpen(true)} className="shrink-0 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
-                        <Plus className="mr-2 h-4 w-4" /> Create Task
+                    <Button
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="shrink-0 bg-primary/90 hover:bg-primary hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                        size="lg"
+                    >
+                        <Plus className="mr-2 h-5 w-5" /> Create Task
                     </Button>
-                </div>
+                </motion.div>
 
                 {/* Filters */}
-                <div className="flex flex-wrap gap-4 p-4 border rounded-lg bg-card/30">
-                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <motion.div
+                    variants={item}
+                    className="flex flex-wrap gap-4 p-5 border border-border/50 rounded-xl bg-card/30 backdrop-blur-xl shadow-sm"
+                >
+                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
                         <Filter className="h-4 w-4" />
-                        Filters:
+                        Filters
                     </div>
+                    <div className="h-4 w-px bg-border/50 mx-2 hidden sm:block" />
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="text-sm bg-background/50 border border-border/50 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-background/80"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
@@ -81,7 +106,7 @@ export default function Dashboard() {
                     </select>
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="text-sm bg-background/50 border border-border/50 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-background/80"
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
                     >
@@ -90,7 +115,7 @@ export default function Dashboard() {
                     </select>
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="text-sm bg-background/50 border border-border/50 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-background/80"
                         value={sortOrder}
                         onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
                     >
@@ -99,38 +124,62 @@ export default function Dashboard() {
                     </select>
 
                     {(statusFilter || priorityFilter) && (
-                        <Button variant="ghost" size="sm" onClick={() => { setStatusFilter(""); setPriorityFilter(""); }}>
-                            Clear
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => { setStatusFilter(""); setPriorityFilter(""); }}
+                            className="ml-auto hover:bg-destructive/10 hover:text-destructive"
+                        >
+                            Clear Filters
                         </Button>
                     )}
-                </div>
+                </motion.div>
 
                 <div className="space-y-10">
                     {/* Overdue Section - High Priority Visibility */}
                     {overdueTasks.length > 0 && (
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-semibold flex items-center gap-2 text-red-600 dark:text-red-400">
-                                ⚠️ Overdue Tasks <span className="text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-0.5 rounded-full">{overdueTasks.length}</span>
-                            </h2>
-                            <TaskList tasks={overdueTasks} isLoading={isLoading} emptyMessage="No overdue tasks." />
-                        </div>
+                        <motion.div variants={item} className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold flex items-center gap-2 text-red-500">
+                                    <span className="relative flex h-3 w-3">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                    </span>
+                                    Attention Needed
+                                </h2>
+                                <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-sm font-medium border border-red-500/20">
+                                    {overdueTasks.length} Overdue
+                                </span>
+                            </div>
+                            <div className="border-l-2 border-red-500/50 pl-4 py-1">
+                                <TaskList tasks={overdueTasks} isLoading={isLoading} emptyMessage="No overdue tasks." />
+                            </div>
+                        </motion.div>
                     )}
 
                     {/* My Tasks Section */}
-                    <div className="space-y-4">
-                        <h2 className="text-xl font-semibold flex items-center gap-2">
-                            My Tasks <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{assignedTasks.length}</span>
-                        </h2>
+                    <motion.div variants={item} className="space-y-5">
+                        <div className="flex items-center gap-3">
+                            <h2 className="text-2xl font-bold tracking-tight">My Tasks</h2>
+                            <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
+                                {assignedTasks.length}
+                            </span>
+                        </div>
                         <TaskList tasks={assignedTasks} isLoading={isLoading} emptyMessage="You have no tasks assigned to you. Enjoy the free time!" />
-                    </div>
+                    </motion.div>
 
                     {/* Created By Me Section */}
-                    <div className="space-y-4">
-                        <h2 className="text-xl font-semibold flex items-center gap-2">
-                            Created By Me <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{createdTasks.length}</span>
-                        </h2>
-                        <TaskList tasks={createdTasks} isLoading={isLoading} emptyMessage="You haven't created any tasks yet." />
-                    </div>
+                    <motion.div variants={item} className="space-y-5">
+                        <div className="flex items-center gap-3">
+                            <h2 className="text-2xl font-bold tracking-tight text-muted-foreground">Created By Me</h2>
+                            <span className="px-2.5 py-0.5 rounded-full bg-muted/50 text-muted-foreground text-xs font-semibold border border-border/50">
+                                {createdTasks.length}
+                            </span>
+                        </div>
+                        <div className="opacity-90 hover:opacity-100 transition-opacity">
+                            <TaskList tasks={createdTasks} isLoading={isLoading} emptyMessage="You haven't created any tasks yet." />
+                        </div>
+                    </motion.div>
                 </div>
 
                 <CreateTaskModal
@@ -138,6 +187,6 @@ export default function Dashboard() {
                     onClose={() => setIsCreateModalOpen(false)}
                 />
             </div>
-        </div>
+        </motion.div>
     );
 }

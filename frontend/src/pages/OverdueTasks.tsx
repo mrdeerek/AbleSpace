@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Filter, Clock, AlertTriangle, CheckSquare } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import { TaskList } from "../components/tasks/TaskList";
 import { useTasks } from "../hooks/useTasks";
@@ -44,36 +45,56 @@ export default function OverdueTasks() {
 
     const overdueTasks = filterTasks(allTasks);
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
-        <div
-            className="space-y-8 animate-in fade-in duration-500 pb-10 min-h-full bg-cover bg-fixed bg-center"
-            style={{
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.7)), url("/dashboard-bg.png")',
-                backgroundAttachment: 'fixed'
-            }}
+        <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="space-y-8 pb-10 min-h-full"
         >
-            <div className="p-6 space-y-8">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-6 md:p-8 space-y-8">
+                <motion.div variants={item} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3 text-red-600 dark:text-red-500">
-                            <Clock className="h-8 w-8" />
+                        <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3 text-red-500">
+                            <span className="p-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                                <Clock className="h-8 w-8" />
+                            </span>
                             Overdue Tasks
                         </h1>
-                        <p className="text-muted-foreground mt-1">
-                            These tasks have passed their due date and require immediate attention.
+                        <p className="text-muted-foreground mt-2 text-lg">
+                            These tasks have passed their due date.
                         </p>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Filters */}
-                <div className="flex flex-wrap gap-4 p-4 border rounded-lg bg-red-50/50 dark:bg-red-900/10 border-red-100 dark:border-red-900/20">
-                    <div className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
+                <motion.div
+                    variants={item}
+                    className="flex flex-wrap gap-4 p-5 border border-red-500/20 rounded-xl bg-red-500/5 backdrop-blur-xl shadow-sm"
+                >
+                    <div className="flex items-center gap-2 text-sm font-medium text-red-500">
                         <Filter className="h-4 w-4" />
-                        Filters:
+                        Filters
                     </div>
+                    <div className="h-4 w-px bg-red-500/20 mx-2 hidden sm:block" />
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                        className="text-sm bg-background/50 border border-red-500/20 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all hover:bg-background/80"
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
                     >
@@ -82,7 +103,7 @@ export default function OverdueTasks() {
                     </select>
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                        className="text-sm bg-background/50 border border-red-500/20 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all hover:bg-background/80"
                         value={sortOrder}
                         onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
                     >
@@ -91,29 +112,40 @@ export default function OverdueTasks() {
                     </select>
 
                     {priorityFilter && (
-                        <Button variant="ghost" size="sm" onClick={() => setPriorityFilter("")} className="text-red-600 hover:text-red-700 hover:bg-red-100">
-                            Clear
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setPriorityFilter("")}
+                            className="ml-auto text-red-500 hover:text-red-700 hover:bg-red-500/10"
+                        >
+                            Clear Filters
                         </Button>
                     )}
-                </div>
+                </motion.div>
 
                 {/* Task List */}
-                <div className="space-y-4">
+                <motion.div variants={item} className="space-y-6">
                     {overdueTasks.length > 0 ? (
-                        <div className="flex items-center gap-2 p-3 rounded-md bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-sm border border-red-200 dark:border-red-800">
-                            <AlertTriangle className="h-4 w-4" />
-                            <strong>Action Required:</strong> You have {overdueTasks.length} overdue tasks pending.
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 text-base border border-red-500/20 shadow-sm">
+                            <AlertTriangle className="h-5 w-5 shrink-0 animate-pulse" />
+                            <span>
+                                <strong>Action Required:</strong> You have {overdueTasks.length} overdue tasks pending. Please resolve them as soon as possible.
+                            </span>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2 p-3 rounded-md bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-sm border border-green-200 dark:border-green-800">
-                            <CheckSquare className="h-4 w-4" />
-                            <strong>Great Job!</strong> You have no overdue tasks.
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 text-green-600 dark:text-green-400 text-base border border-green-500/20 shadow-sm">
+                            <CheckSquare className="h-5 w-5 shrink-0" />
+                            <span>
+                                <strong>Great Job!</strong> You have no overdue tasks. Keep up the good work!
+                            </span>
                         </div>
                     )}
 
-                    <TaskList tasks={overdueTasks} isLoading={isLoading} emptyMessage="No overdue tasks found." />
-                </div>
+                    <div className="border-l-4 border-red-500/30 pl-4">
+                        <TaskList tasks={overdueTasks} isLoading={isLoading} emptyMessage="No overdue tasks found." />
+                    </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }

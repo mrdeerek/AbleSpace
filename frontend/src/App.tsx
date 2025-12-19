@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import MyTasks from "./pages/MyTasks";
 import OverdueTasks from "./pages/OverdueTasks";
+import LandingPage from "./pages/LandingPage";
 import { ToastProvider } from "./context/ToastContext";
 
 // Protected Route Wrapper
@@ -25,8 +26,11 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
+            {/* Landing Page - Public */}
+            <Route path="/" element={<LandingPage />} />
+
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/tasks" element={<MyTasks />} />
               <Route path="/overdue" element={<OverdueTasks />} />

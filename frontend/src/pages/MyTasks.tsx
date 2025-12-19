@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Filter, CheckSquare } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import { TaskList } from "../components/tasks/TaskList";
 import { useTasks } from "../hooks/useTasks";
@@ -40,36 +41,58 @@ export default function MyTasks() {
     // Filter for My Tasks (Assigned to current user)
     const myTasks = filterTasks(allTasks?.filter(t => t.assignedToId === user?.id));
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
-        <div
-            className="space-y-8 animate-in fade-in duration-500 pb-10 min-h-full bg-cover bg-fixed bg-center"
-            style={{
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.7)), url("/dashboard-bg.png")',
-                backgroundAttachment: 'fixed'
-            }}
+        <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="space-y-8 pb-10 min-h-full"
         >
-            <div className="p-6 space-y-8">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-6 md:p-8 space-y-8">
+                <motion.div variants={item} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                            <CheckSquare className="h-8 w-8 text-primary" />
-                            My Tasks
+                        <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
+                            <span className="p-2 rounded-lg bg-primary/10 text-primary">
+                                <CheckSquare className="h-8 w-8" />
+                            </span>
+                            <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+                                My Tasks
+                            </span>
                         </h1>
-                        <p className="text-muted-foreground mt-1">
-                            Tasks assigned specifically to you.
+                        <p className="text-muted-foreground mt-2 text-lg">
+                            Stay on top of your assigned work.
                         </p>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Filters */}
-                <div className="flex flex-wrap gap-4 p-4 border rounded-lg bg-card/30">
-                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <motion.div
+                    variants={item}
+                    className="flex flex-wrap gap-4 p-5 border border-border/50 rounded-xl bg-card/30 backdrop-blur-xl shadow-sm"
+                >
+                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
                         <Filter className="h-4 w-4" />
-                        Filters:
+                        Filters
                     </div>
+                    <div className="h-4 w-px bg-border/50 mx-2 hidden sm:block" />
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="text-sm bg-background/50 border border-border/50 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-background/80"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
@@ -78,7 +101,7 @@ export default function MyTasks() {
                     </select>
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="text-sm bg-background/50 border border-border/50 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-background/80"
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
                     >
@@ -87,7 +110,7 @@ export default function MyTasks() {
                     </select>
 
                     <select
-                        className="text-sm bg-background border rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="text-sm bg-background/50 border border-border/50 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all hover:bg-background/80"
                         value={sortOrder}
                         onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
                     >
@@ -96,20 +119,25 @@ export default function MyTasks() {
                     </select>
 
                     {(statusFilter || priorityFilter) && (
-                        <Button variant="ghost" size="sm" onClick={() => { setStatusFilter(""); setPriorityFilter(""); }}>
-                            Clear
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => { setStatusFilter(""); setPriorityFilter(""); }}
+                            className="ml-auto hover:bg-destructive/10 hover:text-destructive"
+                        >
+                            Clear Filters
                         </Button>
                     )}
-                </div>
+                </motion.div>
 
                 {/* Task List */}
-                <div className="space-y-4">
-                    <div className="text-sm text-muted-foreground">
-                        Showing {myTasks.length} tasks
+                <motion.div variants={item} className="space-y-4">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground bg-muted/20 p-2 rounded-lg border border-border/40">
+                        <span className="pl-2">Showing {myTasks.length} tasks assigned to you</span>
                     </div>
                     <TaskList tasks={myTasks} isLoading={isLoading} emptyMessage="You have no tasks assigned to you. Enjoy the free time!" />
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }

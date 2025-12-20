@@ -42,13 +42,7 @@ A comprehensive, full-stack task management application built to facilitate seam
    ```bash
    npm install
    ```
-3. Create a `.env` file in the `backend/` root:
-   ```env
-   PORT=5000
-   MONGO_URI=mongodb://localhost:27017/ablespace_tasks
-   JWT_SECRET=your_secure_random_secret_key
-   ```
-4. Start the server:
+3. Start the server:
    ```bash
    npm run dev
    ```
